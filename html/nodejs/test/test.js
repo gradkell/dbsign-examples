@@ -20,7 +20,7 @@ $(document).ready(function(){
 
   /* Initialize DBsignJSWS */
   dbsjsws = new CDBsignJSWS({
-    mobile_license_id:'9E282C11B1FC9DD3ABDF275F973A1A19DDD7A5F9',
+    mobile_license_id:'YOUR_MOBILE_LICENSE_ID_HERE',
     data_url:'/dbsign/server',
     on_init_failure_callback:()=>alert('DBsign failed to initialize.'),
     on_ready_callback:onDBsignReady
