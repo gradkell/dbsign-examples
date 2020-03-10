@@ -1,0 +1,60 @@
+<!--
+*************************************************************************
+* This code is provided 'as is' with no warranty expressed or implied.  *
+*                                                                       *
+* It is not provided or distributed as part of the DBsign Data Security *
+* Suite, nor is it officially supported by Gradkell Systems, Inc.       *
+*                                                                       *
+* It is provided solely for demonstration purposes.                     *
+*************************************************************************
+-->
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    
+    <!-- DBsignJSWS files -->
+    <link rel="stylesheet" href="/js/dbsign/4.0.11.2/css/DBsignJSWS.css">
+    <script src="/js/dbsign/4.0.11.2/js/DBsignJSWS.js"></script>
+    
+    <title>Lorem ipsum</title>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="jumbotron mt-3">
+        <h1>Lorem ipsum</h1>
+        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+
+        <form id="the_form">
+          <div class="form-group">
+            <label for="fname">First Name</label>
+            <input type="text" class="form-control" id="fname" name="fname" value="John">
+          </div>
+          <div class="form-group">
+            <label for="lname">Last Name</label>
+            <input type="text" class="form-control" id="lname" name="lname" value="Smith">
+          </div>
+
+          <!-- Hidden input for submitting DBsign signature. -->
+          <input type="text" class="form-control" id="dbs_signature" name="dbs_signature" readonly hidden>
+
+          <button type="submit" class="btn btn-primary" id="submit_btn" disabled>Submit</button>
+        </form>
+      </div>
+    </div>
+
+    <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark">
+      <div class="text-muted">Contact <a href="mailto:support@gradkell.com">support@gradkell.com</a> for help.</div>
+    </nav>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="test.js"></script>
+  </body>
+</html>
