@@ -8,25 +8,25 @@ Table of Contents:
 
 This is a simple library that takes care of many of the details of interacting with the DBsign Server.  
 
-It is called from server side Java code and contains classses and APIs that help with
+It is called from server side Java code and contains classes and APIs that help with
 
-- Formatting and making HTTP requests to the DBsign Server
-- Parsing responses from the DBsign Server into easily usable objects
-- Managing database records for the DBsign DTBS-ID feature.
+- Formatting and making HTTP requests to the DBsign Server,
+- Parsing responses from the DBsign Server into easily usable objects,
+- Managing database records for the DBsign DTBS-ID feature, and
 - Creating canonical XML to format data to be signed (DTBS).
 
-The dbsign-singature-api can be used to sign various types of data including PDF files, text data, binary data, etc.  It also has a class called CCanonicalXml which allows you to use a `java.util.Map` type interface to create structured data to be signed and always generate exactly the same XML for the same data.
+The dbsign-singature-api can be used to sign various types of data including PDF files, text data, binary data, etc.  It also has a class called `CCanonicalXml` which allows you to use a `java.util.Map` type interface to create structured data to be signed that is always generated exactly for the same data.
 
 ## Basic Use of the API
 
-The Java code of the dbsign-signature-library is pretty simple and can be read or modified to meet your requirements.  Essentially, you just 
+The Java code of the dbsign-signature-library is pretty simple and can be modified to meet your requirements.  Essentially, you just 
 
-- make an instance of the `CSignatureAPI` object,
-- create and populate a `CSignatureOptions*` object,
-- pass the the CSignatureOptions object to the API's `sign*()` or `verify*()` functions, and
-- Receive the result of the operation in a `CSignatureResult` object.
+1. Make an instance of the `CSignatureAPI` object,
+2. Create and populate a `CSignatureOptions*` object,
+3. Pass the the CSignatureOptions object to the API's `sign*()` or `verify*()` functions, and
+4. Receive the result of the operation in a `CSignatureResult` object.
 
-There are also functions in the API for inserting, fetching, and deleting database records for DBsign's DTBS-ID feature.  The DTBS-ID feature allows the host application to use the database to communicate potentially large DTBS blocks via database tables.  There are also API helper functions for obtaining database connections from a JNDI `javax.sql.DataSource` and also just creating connections using a JDBC driver.  
+There are also functions in the API for inserting, fetching, and deleting database records for DBsign's DTBS-ID feature.  The DTBS-ID feature allows the host application to use the database to communicate potentially large DTBS blocks to the DBsign Server via database tables.  There are also API helper functions for obtaining database connections from a JNDI `javax.sql.DataSource` and also just creating connections using a JDBC driver.  
 
 Here is an example of making a user-id mode derived signature on some text data:
 
@@ -56,11 +56,13 @@ There are two example driver programs in the `com.signature.code` package.
 
 > *Canonicalization: a process for converting data that has more than one possible representation into a "standard", "normal", or canonical form.*
 
-Data canonicalization is important when data is digitally signed because any change in the data will cause a signature verification failure.  The signature library contains a class called `CCanonicalDtbs` to help construct XML data that is always formatted the same way.
+Data canonicalization is important when data is digitally signed because any difference in the data values or format will cause a signature verification failure.  The `dbsign-signature-library` contains a class called `CCanonicalDtbs` to help construct XML data that is always formatted the same way.
 
-The `CCanonicalDtbs` class is just a `Map` that contains "items" which are contained in "sections".  A `CCanonicalDtbs` object itself represents a section and contains both items and references to other `CCanonicalDtbs` sections. Items are just string key to string value mappings inside a section. These recursively defined sections implement a heirarchical data structure.  
+The `CCanonicalDtbs` class is just a `Map` that contains "items" which are contained in "sections".  A `CCanonicalDtbs` object itself represents a section and contains both items and references to other `CCanonicalDtbs` sections. Items are just string key to string value mappings inside a section. These nested sections implement a heirarchical data structure which can be easily represented in XML.  There are also open standards for XML canonicalization, unlike JSON.
 
-A `CanonicalDtbs` class can convert itself to a canonicalized XML via its `toXml()` method.  It can also parse the XML back into a nested `CanonicalDtbs` object with its `parse()` method.
+A `CanonicalDtbs` class can be converted to a canonicalized XML via its `toXml()` method.  Conversly, the XML can be parsed back into nested `CanonicalDtbs` objects with its `parse()` method.
+
+Here is an example:
 
 ```
   // Setup a canonical DTBS object.
@@ -118,7 +120,7 @@ The canonical XML (above) has the following structure:
 </s>
 ```
 
-The XML format is very simple and designed to be as low-overhead as possible.  The `<s>` tag is a section and the `<i>` tag is an item.  The `n` attribute is the name of the section or item.  Notice that the items in a section are in order.  Also not that the `Date` objects are all in a certain format and the UTC timezone.  `CCanonicalDtbs.setItem()` is overloaded for common data types so that the data is always represented in exactly the same way.
+The XML format is very simple and designed to be as space-efficient as possible.  The `<s>` tag is a section and the `<i>` tag is an item.  The `n` attribute is the name of the section or item.  Notice that the items in a section are in order.  Also not that the `Date` objects are all in a specific ISO 8601 compliant format and in the UTC timezone.  `CCanonicalDtbs.setItem()` is overloaded for common data types so that the data is always represented in exactly the same way.
 
 ## Building the Code
 
