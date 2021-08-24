@@ -4,6 +4,7 @@ Table of Contents:
 - [dbsign-signature-library](#dbsign-signature-library)
   - [Basic Use of the API](#basic-use-of-the-api)
   - [Canonical DTBS](#canonical-dtbs)
+  - [Building the Code](#building-the-code)
 
 This is a simple library that takes care of many of the details of interacting with the DBsign Server.  
 
@@ -117,3 +118,30 @@ The XML has the following structure:
 
 The `<s>` tag is a section and the `<i>` tag is an item.  Notice that the items in a section are in order.  Also not that the `Date` objects are all in a certain format and the UTC timezone.  `CCanonicalDtbs.setItem()` is overloaded for common data types so that the data is always represented in exactly the same way.
 
+## Building the Code
+
+The code is a Maven project so building is simple.  You have to have a Java JDK and Maven installed and working.
+
+```
+$ mvn install
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------< com.example.code:dbsign-signature-library >--------------
+[INFO] Building dbsign-signature-library 0.0.1
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[...]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.623 s
+[INFO] Finished at: 2021-08-24T15:37:31-05:00
+[INFO] ------------------------------------------------------------------------
+```
+
+The resulting jar file will be in the `target` folder.
+
+```
+$ ls -l target/*.jar
+-rwxrwxrwx 1 root root 59774 Aug 24 15:37 target/dbsign-signature-library-0.0.1.jar
+```
