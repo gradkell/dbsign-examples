@@ -28,8 +28,6 @@ The Java code of the `dbsign-signature-library` is pretty simple and can be modi
 
 The function is almost identical for signature verification.
 
-There are also functions in the API for inserting, fetching, and deleting database records for DBsign's DTBS-ID feature.  The DTBS-ID feature allows the host application to use the database to communicate potentially large DTBS blocks to the DBsign Server via database tables.  There are also API helper functions for obtaining database connections from a JNDI `javax.sql.DataSource` and also just creating connections using a JDBC driver.  
-
 Here is an example of making a user-id mode derived signature on some text data:
 
 ```
@@ -51,6 +49,8 @@ CSignatureResult result = api.sign( options );
 
 String strDtbsBase64Signed = result.getSignature();
 ```
+
+There are also functions in the API for inserting, fetching, and deleting database records for DBsign's DTBS-ID feature.  The DTBS-ID feature allows the host application to use the database to communicate potentially large DTBS blocks to the DBsign Server via database tables.  There are also API helper functions for obtaining database connections from a JNDI `javax.sql.DataSource` and also just creating connections using a JDBC driver.  
 
 There are two example driver programs in the `com.signature.code` package.
 
