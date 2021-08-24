@@ -15,16 +15,18 @@ It is called from server side Java code and contains classes and APIs that help 
 - Managing database records for the DBsign DTBS-ID feature, and
 - Creating canonical XML to format data to be signed (DTBS).
 
-The dbsign-singature-api can be used to sign various types of data including PDF files, text data, binary data, etc.  It also has a class called `CCanonicalXml` which allows you to use a `java.util.Map` type interface to create structured data to be signed that is always generated exactly for the same data.
+The `dbsign-signature-library` can be used to sign various types of data including PDF files, text data, binary data, etc.  It also has a class called `CCanonicalXml` which allows you to use a `java.util.Map` type interface to create structured data to be signed that is always generated exactly for the same data.
 
 ## Basic Use of the API
 
-The Java code of the dbsign-signature-library is pretty simple and can be modified to meet your requirements.  Essentially, you just 
+The Java code of the `dbsign-signature-library` is pretty simple and can be modified to meet your requirements.  Essentially, you just do the following basic steps: 
 
 1. Make an instance of the `CSignatureAPI` object,
 2. Create and populate a `CSignatureOptions*` object,
 3. Pass the the CSignatureOptions object to the API's `sign*()` or `verify*()` functions, and
 4. Receive the result of the operation in a `CSignatureResult` object.
+
+The function is almost identical for signature verification.
 
 There are also functions in the API for inserting, fetching, and deleting database records for DBsign's DTBS-ID feature.  The DTBS-ID feature allows the host application to use the database to communicate potentially large DTBS blocks to the DBsign Server via database tables.  There are also API helper functions for obtaining database connections from a JNDI `javax.sql.DataSource` and also just creating connections using a JDBC driver.  
 
@@ -120,7 +122,7 @@ The canonical XML (above) has the following structure:
 </s>
 ```
 
-The XML format is very simple and designed to be as space-efficient as possible.  The `<s>` tag is a section and the `<i>` tag is an item.  The `n` attribute is the name of the section or item.  Notice that the items in a section are in order.  Also not that the `Date` objects are all in a specific ISO 8601 compliant format and in the UTC timezone.  `CCanonicalDtbs.setItem()` is overloaded for common data types so that the data is always represented in exactly the same way.
+The XML format is very simple and designed to be as space-efficient as possible.  The `<s>` tag is a section and the `<i>` tag is an item.  The `n` attribute is the name of the section or item.  Notice that the items in a section are in order.  Also note that the `Date` objects are all in a specific ISO 8601 compliant format and in the UTC timezone.  `CCanonicalDtbs.setItem()` is overloaded for common data types so that the data is always represented in exactly the same way.
 
 ## Building the Code
 
