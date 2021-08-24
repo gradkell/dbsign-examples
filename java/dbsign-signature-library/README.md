@@ -96,7 +96,7 @@ This code produces the following canonical XML:
 <s><i n="_docType">purchase_order</i><i n="_signDate">2021-08-24T20:13:32Z</i><s n="document"><i n="po_date">2021-08-24T20:13:32Z</i><s n="po_items"><i n="computer">890</i><i n="keyboard">50</i><i n="monitor">500</i><i n="mouse">30</i></s><i n="po_num">1234</i><i n="vendor">ACME Widgets, Inc.</i></s></s>
 ```
 
-The XML has the following structure:
+The canonical XML (above) has the following structure:
 
 ```
 <s>
@@ -116,7 +116,7 @@ The XML has the following structure:
 </s>
 ```
 
-The `<s>` tag is a section and the `<i>` tag is an item.  Notice that the items in a section are in order.  Also not that the `Date` objects are all in a certain format and the UTC timezone.  `CCanonicalDtbs.setItem()` is overloaded for common data types so that the data is always represented in exactly the same way.
+The XML format is very simple and designed to be as low-overhead as possible.  The `<s>` tag is a section and the `<i>` tag is an item.  The `n` attribute is the name of the section or item.  Notice that the items in a section are in order.  Also not that the `Date` objects are all in a certain format and the UTC timezone.  `CCanonicalDtbs.setItem()` is overloaded for common data types so that the data is always represented in exactly the same way.
 
 ## Building the Code
 
