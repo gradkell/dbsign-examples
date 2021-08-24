@@ -122,7 +122,7 @@ The canonical XML (above) has the following structure:
 </s>
 ```
 
-The XML format is very simple and designed to be as space-efficient as possible.  The `<s>` tag is a section and the `<i>` tag is an item.  The `n` attribute is the name of the section or item.  Notice that the items in a section are in order.  Also note that the `Date` objects are all in a specific ISO 8601 compliant format and in the UTC timezone.  `CCanonicalDtbs.setItem()` is overloaded for common data types so that the data is always represented in exactly the same way.
+The XML format is very simple and designed to be as space-efficient as possible.  The `<s>` tag is a section and the `<i>` tag is an item.  The `n` attribute is the name of the section or item.  Notice that the items in a section are in order by name.  Also note that the `Date` objects are all in a specific ISO 8601 compliant format and in the UTC timezone.  `CCanonicalDtbs.setItem()` is overloaded for common data types so that the data is always represented in exactly the same way.
 
 ## Building the Code
 
