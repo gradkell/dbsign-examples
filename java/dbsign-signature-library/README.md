@@ -53,7 +53,7 @@ String strDtbsBase64Signed = result.getSignature();
 
 > *Canonicalization: a process for converting data that has more than one possible representation into a "standard", "normal", or canonical form.*
 
-Data canonicalization is important when data is digitally signed because any change in the data will cause a signature verifucation failure.  The signature library contains a classes calleds `CCanonicalDtbs` to help construct XML data that is always formatted the same way.
+Data canonicalization is important when data is digitally signed because any change in the data will cause a signature verification failure.  The signature library contains a classes calleds `CCanonicalDtbs` to help construct XML data that is always formatted the same way.
 
 The `CCanonicalDtbs` class is just a `Map` that contains "items" which are contained in "sections".  A `CCanonicalDtbs` object itself represents a section and contains both items and references to other `CCanonicalDtbs` sections. Items are just string key to string value mappings inside a section. These recursively defined sections implement a heirarchical data structure.  
 
