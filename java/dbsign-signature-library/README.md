@@ -50,6 +50,8 @@ CSignatureResult result = api.sign( options );
 String strDtbsBase64Signed = result.getSignature();
 ```
 
+There are two example driver programs in the `com.signature.code` package.
+
 ## Canonical DTBS
 
 > *Canonicalization: a process for converting data that has more than one possible representation into a "standard", "normal", or canonical form.*
