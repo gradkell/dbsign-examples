@@ -26,7 +26,7 @@ The Java code of the dbsign-signature-library is pretty simple and can be read o
 - pass the the CSignatureOptions object to the API's `sign*()` or `verify*()` functions, and
 - Receive the result of the operation in a `CSignatureResult` object.
 
-There are also functions in the API for inserting, fetching, and deleting database records for DBsign's DTBS-ID feature.  The DTBS-ID feature allows the host application to use the database to communicate potentially large DTBS blocks via database tables.  There are also API helper functions for obtaining database connections from a JNDI `java.util.DataSource` and also just creating connections using a JDBC driver.  
+There are also functions in the API for inserting, fetching, and deleting database records for DBsign's DTBS-ID feature.  The DTBS-ID feature allows the host application to use the database to communicate potentially large DTBS blocks via database tables.  There are also API helper functions for obtaining database connections from a JNDI `javax.sql.DataSource` and also just creating connections using a JDBC driver.  
 
 Here is an example of making a user-id mode derived signature on some text data:
 
