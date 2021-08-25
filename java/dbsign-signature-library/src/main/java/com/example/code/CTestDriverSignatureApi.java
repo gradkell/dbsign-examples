@@ -26,13 +26,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.example.code.SignatureAPI.CMiscUtils;
+import com.example.code.SignatureAPI.CSignatureAPI;
+import com.example.code.SignatureAPI.CSignatureException;
 import com.example.code.SignatureAPI.CSignatureOptions;
 import com.example.code.SignatureAPI.CSignatureOptions.ContentType;
 import com.example.code.SignatureAPI.CSignatureOptionsAcd;
 import com.example.code.SignatureAPI.CSignatureOptionsPdf;
 import com.example.code.SignatureAPI.CSignatureResult;
-import com.example.code.SignatureAPI.CSignatureAPI;
-import com.example.code.SignatureAPI.CSignatureException;
 
 /**
  * Test driver program for the CSignatureAPI class.
@@ -95,6 +95,19 @@ public class CTestDriverSignatureApi
     }
   }
 
+  /**
+   * Example function to sign a PDF with User-Id Mode Derived Signature via DTBS-ID
+   * method. The DTBS-ID method stores the PDF in a database table that the DBsign
+   * Server has access to so that the PDF doesn't have to be sent in the HTTP
+   * request. The PDF file is in file Form1040ALL.pdf. The signed PDF will be
+   * written to Form1040ALL_Signed.pdf.
+   * 
+   * @param args
+   * @throws CSignatureException
+   * @throws IOException
+   * @throws ClassNotFoundException
+   * @throws SQLException
+   */
   public static void testSignPdfDtbsIdUserMode( String[] args ) throws CSignatureException, IOException, ClassNotFoundException, SQLException
   {
     System.out.println( "Starting." );
@@ -114,9 +127,9 @@ public class CTestDriverSignatureApi
       // I wrote a little function to do this. Like this:
       // conn = CSignatureAPI.getConnectionFromDatasource("jdbc/SOME_DB_NAME");
       conn = CSignatureAPI.connectToDatabaseJdbc( CTestDriverSignatureApi.JDBC_DRIVER,
-                                                 CTestDriverSignatureApi.JDBC_URL,
-                                                 CTestDriverSignatureApi.JDBC_USER,
-                                                 CTestDriverSignatureApi.JDBC_PASSWORD );
+                                                  CTestDriverSignatureApi.JDBC_URL,
+                                                  CTestDriverSignatureApi.JDBC_USER,
+                                                  CTestDriverSignatureApi.JDBC_PASSWORD );
 
       // Make an instance of the signature API class.
       CSignatureAPI api = new CSignatureAPI();
@@ -144,7 +157,7 @@ public class CTestDriverSignatureApi
       // Optionally add lock fields
       options.setLockFields( Arrays.asList( "amountYouMade", "amountYouOwe" ) );
 
-      // Optionally add fill fields.
+      // Optionally add PDF fields and values to be filled.
       Map<String, String> mapFillFields = new HashMap<>();
       mapFillFields.put( "amountYouMade", "123" );
       mapFillFields.put( "amountYouOwe", "1234" );
@@ -192,13 +205,23 @@ public class CTestDriverSignatureApi
     System.out.println( "Done!" );
   }
 
+  /**
+   * Example function to sign data with Application Constructed Data (i.e., data
+   * specified by the host application) using User-Id mode Derived Signature.
+   * The Data To Be Signed (DTBS) is stored in file DTBS.txt and the resulting
+   * signature is stored in DTBS_Signature.txt.
+   * 
+   * @param args
+   * @throws CSignatureException
+   * @throws IOException
+   */
   public static void testSignAcdUserMode( String[] args ) throws CSignatureException, IOException
   {
     System.out.println( "Starting." );
 
     try
     {
-      // Get base64 PDF.
+      // Get base64 DTBS.
       File FILE_INPUT = new File( "DTBS.txt" );
       File FILE_OUTPUT = new File( "DTBS_Signature.txt" );
       System.out.println( "Reading input file..." );
@@ -210,13 +233,12 @@ public class CTestDriverSignatureApi
       // Set DBsign Server URL
       api.setDataUrl( CTestDriverSignatureApi.DATA_URL );
 
-      // Set up the options for the PDF signature.
+      // Set up the options for the ACD signature.
       CSignatureOptionsAcd options = new CSignatureOptionsAcd( ContentType.APP_SIGN_SAS );
-      // options.setInstanceName( "PdfDemo" );
       options.setSasUserId( "user1234" );
       options.setDtbs( strDtbsBase64, CSignatureOptions.EncFmt.BASE64 );
 
-      // Actually start the signing process. Base64 signed PDF is returned in strPfdBase64Signed.
+      // Actually start the signing process. Base64 signature is returned in strPfdBase64Signed.
       System.out.println( "Calling signing API... " );
       long nStart = System.currentTimeMillis();
 
@@ -233,7 +255,7 @@ public class CTestDriverSignatureApi
       }
       else
       {
-        // Here, you would put the signed PDF back in the application database somehow.
+        // Here, you would put the signature back in the application database somehow.
         System.out.println( "Writing signature output file..." );
 
         CMiscUtils.writeBytesToFile( FILE_OUTPUT,
@@ -246,6 +268,20 @@ public class CTestDriverSignatureApi
     System.out.println( "Done!" );
   }
 
+  /**
+   * Example function to sign data with Application Constructed Data (i.e., data
+   * specified by the host application) using User-Id mode Derived Signature and
+   * using DTBS-ID. The DTBS-ID method stores the PDF in a database table that
+   * the DBsign Server has access to so that the PDF doesn't have to be sent in
+   * the HTTP request. The Data To Be Signed (DTBS) is stored in file DTBS.txt
+   * and the resulting signature is stored in DTBS_Signature.txt.
+   * 
+   * @param args
+   * @throws CSignatureException
+   * @throws IOException
+   * @throws ClassNotFoundException
+   * @throws SQLException
+   */
   public static void testSignAcdDtbsIdUserMode( String[] args ) throws CSignatureException, IOException, ClassNotFoundException, SQLException
   {
     System.out.println( "Starting." );
@@ -253,7 +289,7 @@ public class CTestDriverSignatureApi
     Connection conn = null;
     try
     {
-      // Get base64 PDF.
+      // Get base64 DTBS.
       File FILE_INPUT = new File( "DTBS.txt" );
       File FILE_OUTPUT = new File( "DTBS_Signature.txt" );
       System.out.println( "Reading input file..." );
@@ -265,9 +301,9 @@ public class CTestDriverSignatureApi
       // I wrote a little function to do this. Like this:
       // conn = CSignatureAPI.getConnectionFromDatasource("java:/comp/env/jdbc/SOME_DB_NAME");
       conn = CSignatureAPI.connectToDatabaseJdbc( CTestDriverSignatureApi.JDBC_DRIVER,
-                                                 CTestDriverSignatureApi.JDBC_URL,
-                                                 CTestDriverSignatureApi.JDBC_USER,
-                                                 CTestDriverSignatureApi.JDBC_PASSWORD );
+                                                  CTestDriverSignatureApi.JDBC_URL,
+                                                  CTestDriverSignatureApi.JDBC_USER,
+                                                  CTestDriverSignatureApi.JDBC_PASSWORD );
 
       // Make an instance of the signature API class.
       CSignatureAPI api = new CSignatureAPI();
@@ -275,13 +311,12 @@ public class CTestDriverSignatureApi
       // Set DBsign Server URL
       api.setDataUrl( CTestDriverSignatureApi.DATA_URL );
 
-      // Set up the options for the PDF signature.
+      // Set up the options for the ACD signature.
       CSignatureOptionsAcd options = new CSignatureOptionsAcd( ContentType.APP_SIGN_SAS );
-      // options.setInstanceName( "PdfDemo" );
       options.setSasUserId( "user1234" );
       options.setDtbs( strDtbsBase64, CSignatureOptions.EncFmt.BASE64 );
 
-      // Actually start the signing process. Base64 signed PDF is returned in strPfdBase64Signed.
+      // Actually start the signing process. Base64 signature is returned in strPfdBase64Signed.
       System.out.println( "Calling signing API... " );
       long nStart = System.currentTimeMillis();
 
@@ -298,7 +333,7 @@ public class CTestDriverSignatureApi
       }
       else
       {
-        // Here, you would put the signed PDF back in the application database somehow.
+        // Here, you would put the signature back in the application database somehow.
         System.out.println( "Writing signature output file..." );
 
         CMiscUtils.writeBytesToFile( FILE_OUTPUT,
@@ -322,13 +357,25 @@ public class CTestDriverSignatureApi
     System.out.println( "Done!" );
   }
 
+  /**
+   * Example function to verify a signature with Application Constructed Data
+   * (i.e., data specified by the host application). The Data To Be Signed (DTBS)
+   * is stored in file DTBS.txt and the resulting signature is stored in
+   * DTBS_Signature.txt.
+   * 
+   * @param args
+   * @throws CSignatureException
+   * @throws IOException
+   * @throws ClassNotFoundException
+   * @throws SQLException
+   */
   public static void testVerifyAcd( String[] args ) throws CSignatureException, IOException
   {
     System.out.println( "Starting." );
 
     try
     {
-      // Get base64 PDF.
+      // Get base64 DTBS.
       File FILE_DTBS = new File( "DTBS.txt" );
       File FILE_SIG = new File( "DTBS_Signature.txt" );
       System.out.println( "Reading input file..." );
@@ -341,14 +388,13 @@ public class CTestDriverSignatureApi
       // Set DBsign Server URL
       api.setDataUrl( CTestDriverSignatureApi.DATA_URL );
 
-      // Set up the options for the PDF signature.
+      // Set up the options for the signature.
       CSignatureOptionsAcd options = new CSignatureOptionsAcd( ContentType.APP_VERIFY );
-      // options.setInstanceName( "PdfDemo" );
       options.setDtbs( strDtbs, CSignatureOptions.EncFmt.TEXT );
       options.setSignature( strSignatureBase64,
                             CSignatureOptions.EncFmt.BASE64 );
 
-      // Actually start the signing process. Base64 signed PDF is returned in strPfdBase64Signed.
+      // Actually start the verification process.
       System.out.println( "Calling verify API... " );
       long nStart = System.currentTimeMillis();
 
@@ -363,7 +409,8 @@ public class CTestDriverSignatureApi
 
       if ( result.isError() )
       {
-        throw new CSignatureException( "Signature Verification Failed", result );
+        throw new CSignatureException( "Signature Verification Failed",
+                                       result );
       }
 
     }
@@ -373,6 +420,20 @@ public class CTestDriverSignatureApi
     System.out.println( "Done!" );
   }
 
+  /**
+   * Example function to verify a signature with Application Constructed Data
+   * (i.e., data specified by the host application) using DTBS-ID. The DTBS-ID
+   * method stores the PDF in a database table that the DBsign Server has access
+   * to so that the PDF doesn't have to be sent in the HTTP request. The Data To
+   * Be Signed (DTBS) is stored in file DTBS.txt and the resulting signature is
+   * stored in DTBS_Signature.txt.
+   * 
+   * @param args
+   * @throws CSignatureException
+   * @throws IOException
+   * @throws ClassNotFoundException
+   * @throws SQLException
+   */
   public static void testVerifyAcdDtbsId( String[] args ) throws CSignatureException, IOException, ClassNotFoundException, SQLException
   {
     System.out.println( "Starting." );
@@ -380,7 +441,7 @@ public class CTestDriverSignatureApi
     Connection conn = null;
     try
     {
-      // Get base64 PDF.
+      // Get base64 DTBS.
       File FILE_DTBS = new File( "DTBS.txt" );
       File FILE_SIG = new File( "DTBS_Signature.txt" );
       System.out.println( "Reading input file..." );
@@ -393,9 +454,9 @@ public class CTestDriverSignatureApi
       // I wrote a little function to do this. Like this:
       // conn = CSignatureAPI.getConnectionFromDatasource("java:/comp/env/jdbc/SOME_DB_NAME");
       conn = CSignatureAPI.connectToDatabaseJdbc( CTestDriverSignatureApi.JDBC_DRIVER,
-                                                 CTestDriverSignatureApi.JDBC_URL,
-                                                 CTestDriverSignatureApi.JDBC_USER,
-                                                 CTestDriverSignatureApi.JDBC_PASSWORD );
+                                                  CTestDriverSignatureApi.JDBC_URL,
+                                                  CTestDriverSignatureApi.JDBC_USER,
+                                                  CTestDriverSignatureApi.JDBC_PASSWORD );
 
       // Make an instance of the signature API class.
       CSignatureAPI api = new CSignatureAPI();
@@ -403,14 +464,13 @@ public class CTestDriverSignatureApi
       // Set DBsign Server URL
       api.setDataUrl( CTestDriverSignatureApi.DATA_URL );
 
-      // Set up the options for the PDF signature.
+      // Set up the options for the ACD signature.
       CSignatureOptionsAcd options = new CSignatureOptionsAcd( ContentType.APP_VERIFY );
-      // options.setInstanceName( "PdfDemo" );
       options.setDtbs( strDtbsBase64, CSignatureOptions.EncFmt.TEXT );
       options.setSignature( strSignatureBase64,
                             CSignatureOptions.EncFmt.BASE64 );
 
-      // Actually start the signing process. Base64 signed PDF is returned in strPfdBase64Signed.
+      // Actually start the verification process.
       System.out.println( "Calling verify API... " );
       long nStart = System.currentTimeMillis();
 
@@ -425,7 +485,8 @@ public class CTestDriverSignatureApi
 
       if ( result.isError() )
       {
-        throw new CSignatureException( "Signature Verification Failed", result );
+        throw new CSignatureException( "Signature Verification Failed",
+                                       result );
       }
 
     }
