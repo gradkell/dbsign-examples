@@ -30,7 +30,7 @@ public class CSignatureOptions implements Cloneable
 {
   public enum ContentType
   {
-    APP_SIGN_SAS, APP_VERIFY, PDF_SIGN, MAKESIG_SAS, CHECK_SIG
+    APP_SIGN_SAS, APP_VERIFY, PDF_SIGN, MAKESIG_SAS, VERIFY
   }
 
   public enum SasAuthType
