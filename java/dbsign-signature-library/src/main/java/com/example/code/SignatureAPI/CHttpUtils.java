@@ -21,9 +21,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.Socket;
 import java.net.URL;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509ExtendedTrustManager;
 
 /**
  * Simple class that uses the Java URL object to do HTTP POST or GET
@@ -33,6 +44,77 @@ public class CHttpUtils
 {
   private CHttpUtils()
   {
+  }
+
+  /**
+   * Set the JRE to trust all SSL/TLS certificates.
+   * For dev/test environments only!!!
+   * INSECURE!!! Do not use in production environments!!!
+   */
+  public static void trustAllSslCerts() {
+    System.out.println("#############################");
+    System.out.println("#############################");
+    System.out.println("# BYPASSING ALL SSL/TLS CERT CHECKS!!!");
+    System.out.println("# This is an INSECURE solution and should only be used in dev/test environments!!!");
+    System.out.println("#############################");
+    System.out.println("#############################");
+
+    try {
+      TrustManager[] trustAllCerts = new TrustManager[] { new X509ExtendedTrustManager() {
+        @Override
+        public java.security.cert.X509Certificate[] getAcceptedIssuers()
+        {
+          return null;
+        }
+
+        @Override
+        public void checkClientTrusted(final X509Certificate[] certs, final String authType)
+        {
+        }
+
+        @Override
+        public void checkServerTrusted(final X509Certificate[] certs, final String authType)
+        {
+        }
+
+        @Override
+        public void checkClientTrusted(final X509Certificate[] xcs, final String string, final Socket socket) throws CertificateException
+        {
+        }
+
+        @Override
+        public void checkServerTrusted(final X509Certificate[] xcs, final String string, final Socket socket) throws CertificateException
+        {
+        }
+
+        @Override
+        public void checkClientTrusted(final X509Certificate[] xcs, final String string, final SSLEngine ssle) throws CertificateException
+        {
+        }
+
+        @Override
+        public void checkServerTrusted(final X509Certificate[] xcs, final String string, final SSLEngine ssle) throws CertificateException
+        {
+        }
+      } };
+
+      SSLContext sc = SSLContext.getInstance("SSL");
+      sc.init(null, trustAllCerts, new java.security.SecureRandom());
+      HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+      // Create all-trusting host name verifier
+      HostnameVerifier allHostsValid = new HostnameVerifier() {
+        @Override
+        public boolean verify(final String hostname, final SSLSession session) {
+          return true;
+        }
+      };
+      
+      // Install the all-trusting host verifier
+      HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   /**
