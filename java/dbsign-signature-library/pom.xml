@@ -5,7 +5,7 @@
 
   <groupId>com.example.code</groupId>
   <artifactId>dbsign-signature-library</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
   <packaging>jar</packaging>
 
   <name>dbsign-signature-library</name>
