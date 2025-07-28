@@ -39,6 +39,7 @@ import com.example.code.SignatureAPI.CSignatureResult;
  */
 public class CTestDriverSignatureApi
 {
+
   public static final String DATA_URL      = "http://localhost/dbsign/server";
   public static final String JDBC_DRIVER   = "com.mysql.jdbc.Driver";
   public static final String JDBC_URL      = "jdbc:mysql://localhost:3306/dbsign?useSSL=false";
@@ -49,6 +50,10 @@ public class CTestDriverSignatureApi
   {
     try
     {
+      System.out.println( "\n#################################" );
+      System.out.println( "testSignPdfDtbsParamUserMode()" );
+      CTestDriverSignatureApi.testSignPdfDtbsParamUserMode( args );
+      
       System.out.println( "\n#################################" );
       System.out.println( "testSignPdfDtbsIdUserMode()" );
       CTestDriverSignatureApi.testSignPdfDtbsIdUserMode( args );
@@ -117,7 +122,7 @@ public class CTestDriverSignatureApi
     {
       // Get base64 PDF.
       File FILE_INPUT = new File( "Form1040ALL.pdf" );
-      File FILE_OUTPUT = new File( "Form1040ALL_Signed.pdf" );
+      File FILE_OUTPUT = new File( "Form1040ALL_Signed_id.pdf" );
       System.out.println( "Reading input file..." );
       String strPdfBase64 = CMiscUtils.readFileB64( FILE_INPUT );
 
@@ -170,6 +175,97 @@ public class CTestDriverSignatureApi
       long nStart = System.currentTimeMillis();
 
       CSignatureResult result = api.signDtbsId( conn, options );
+      String strPfdBase64Signed = result.getSignature();
+
+      long nStop = System.currentTimeMillis();
+      System.out.printf( "%02.2f sec%n", (nStop - nStart) / 1000.0 );
+
+      if ( (strPfdBase64Signed == null) || (strPfdBase64Signed.length() <= 0) )
+      {
+        throw new CSignatureException( "Empty signature returned from signing operation." );
+      }
+      else
+      {
+        // Here, you would put the signed PDF back in the application database somehow.
+        System.out.println( "Writing signed PDF output file..." );
+
+        CMiscUtils.writeBytesToFile( FILE_OUTPUT,
+                                     CMiscUtils.base64Decode( strPfdBase64Signed ) );
+      }
+    }
+    finally
+    {
+      // Carefully close the JDBC connection
+      if ( (conn != null) )
+      {
+        try
+        {
+          conn.close();
+        }
+        catch ( Exception e )
+        {
+        }
+      }
+    }
+    System.out.println( "Done!" );
+  }
+
+  /**
+   * Example function to sign a PDF with User-Id Mode Derived Signature via DTBS-ID
+   * method. The DTBS-ID method stores the PDF in a database table that the DBsign
+   * Server has access to so that the PDF doesn't have to be sent in the HTTP
+   * request. The PDF file is in file Form1040ALL.pdf. The signed PDF will be
+   * written to Form1040ALL_Signed.pdf.
+   * 
+   * @param args
+   * @throws CSignatureException
+   * @throws IOException
+   * @throws ClassNotFoundException
+   * @throws SQLException
+   */
+  public static void testSignPdfDtbsParamUserMode( String[] args ) throws CSignatureException, IOException, ClassNotFoundException, SQLException
+  {
+    System.out.println( "Starting." );
+
+    Connection conn = null;
+    try
+    {
+      // Get base64 PDF.
+      File FILE_INPUT = new File( "Form1040ALL.pdf" );
+      File FILE_OUTPUT = new File( "Form1040ALL_Signed_param.pdf" );
+      System.out.println( "Reading input file..." );
+      String strPdfBase64 = CMiscUtils.readFileB64( FILE_INPUT );
+
+      // Make an instance of the signature API class.
+      CSignatureAPI api = new CSignatureAPI();
+
+      // Set DBsign Server URL
+      api.setDataUrl( CTestDriverSignatureApi.DATA_URL );
+
+      // Set up the options for the PDF signature.
+      CSignatureOptionsPdf options = new CSignatureOptionsPdf();
+      // options.setInstanceName( "PdfDemo" );
+      options.setPdfSigFieldName( "yourSignature" );
+      options.setSasUserId( "user1234" );
+      options.setSignerName( "Bob D. User" );
+      options.setDtbs( strPdfBase64, CSignatureOptions.EncFmt.BASE64 );
+
+      // Optionally add lock fields
+      options.setLockFields( Arrays.asList( "amountYouMade", "amountYouOwe" ) );
+
+      // Optionally add PDF fields and values to be filled.
+      Map<String, String> mapFillFields = new HashMap<>();
+      mapFillFields.put( "amountYouMade", "123" );
+      mapFillFields.put( "amountYouOwe", "1234" );
+      mapFillFields.put( "yourOccupation", "Slacker" );
+      mapFillFields.put( "yourPhone", "123-456-7890" );
+      options.setFillFields( mapFillFields );
+
+      // Actually start the signing process. Base64 signed PDF is returned in strPfdBase64Signed.
+      System.out.println( "Calling signing API... " );
+      long nStart = System.currentTimeMillis();
+
+      CSignatureResult result = api.sign( options );
       String strPfdBase64Signed = result.getSignature();
 
       long nStop = System.currentTimeMillis();

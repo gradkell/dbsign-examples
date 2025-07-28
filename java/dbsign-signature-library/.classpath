@@ -23,7 +23,20 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/DBsign/source/java/var/lib/jdbc/mariadb/mariadb-java-client-2.2.3.jar"/>
-	<classpathentry kind="lib" path="/DBsign/source/java/var/lib/jdbc/mysql/mysql-connector-java-5.1.46-bin.jar"/>
+	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="optional" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/resources">
+		<attributes>
+			<attribute name="test" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="optional" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/mprevost/projects/dbsign/eclipse-workspace/DBsign/source/java/var/lib/jdbc/mariadb/mariadb-java-client-3.3.3.jar"/>
+	<classpathentry kind="lib" path="/home/mprevost/projects/dbsign/eclipse-workspace/DBsign/source/java/var/lib/jdbc/mysql/mysql-connector-j-8.3.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
